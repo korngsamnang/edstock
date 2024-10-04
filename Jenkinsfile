@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Clone Repo on EC2') {
             steps {
-                sshagent(credentials: ['your-ssh-credentials-id']) {  // Replace with your actual SSH credentials ID
+                sshagent(credentials: ['ec2-ssh-credentials']) {  // Replace with your actual SSH credentials ID
                     // SSH into EC2 and clone the repo
                     sh "ssh ${SSH_USER}@${SSH_HOST} 'git clone ${GIT_REPO_URL} ${TARGET_DIR} || (cd ${TARGET_DIR} && git pull)'"
                 }
@@ -18,7 +18,7 @@ pipeline {
         }
         stage('Run Docker Compose on EC2') {
             steps {
-                sshagent(credentials: ['your-ssh-credentials-id']) {  // Replace with your actual SSH credentials ID
+                sshagent(credentials: ['ec2-ssh-credentials']) {  // Replace with your actual SSH credentials ID
                     // SSH into EC2 and run the Docker Compose file
                     sh "ssh ${SSH_USER}@${SSH_HOST} 'cd ${TARGET_DIR} && docker compose up -d --build'"
                 }
