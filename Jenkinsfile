@@ -1,53 +1,31 @@
 pipeline {
     agent any
-
     environment {
         GIT_REPO_URL = 'https://github.com/korngsamnang/edstock.git'
-        TARGET_DIR = '/home/ubuntu/edstock'  // Directory on EC2 where the project is cloned
-        DOCKER_COMPOSE_FILE = '/home/ubuntu/edstock/docker-compose.yml' // Path to Docker Compose file
-        SSH_USER = 'ubuntu'  // SSH user for EC2 instance
-        SSH_HOST = '18.142.55.141' // Replace with your EC2 public IP or DNS
-        SSH_CREDENTIALS_ID = 'ec2-ssh-credentials'  // Jenkins credentials ID for EC2 SSH
+        TARGET_DIR = '/home/ubuntu/edstock'  // Directory on EC2 where repo will be cloned
+        SSH_USER = 'ubuntu'
+        SSH_HOST = '18.142.55.141' // Replace with EC2 public IP
+        SSH_CREDENTIALS_ID = 'ec2-ssh-credentials'  // Replace with your SSH credentials ID in Jenkins
     }
-
     stages {
-        stage('Clone Repository') {
+        stage('Clone Repo on EC2') {
             steps {
-                git branch: 'master',
-                    credentialsId: 'github-credentials', 
-                    url: "${GIT_REPO_URL}"
-            }
-        }
-
-        stage('Deploy to EC2') {
-            steps {
-                script {
-                    sshagent(['${SSH_CREDENTIALS_ID}']) {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} 'if [ ! -d "${TARGET_DIR}" ]; then git clone ${GIT_REPO_URL} ${TARGET_DIR}; else cd ${TARGET_DIR} && git pull; fi'
-                        """
-                    }
+                sshagent(credentials: ['your-ssh-credentials-id']) {  // Replace with your actual SSH credentials ID
+                    // SSH into EC2 and clone the repo
+                    sh "ssh ${SSH_USER}@${SSH_HOST} 'git clone ${GIT_REPO_URL} ${TARGET_DIR} || (cd ${TARGET_DIR} && git pull)'"
                 }
             }
         }
-
-        stage('Execute Docker Compose on EC2') {
+        stage('Run Docker Compose on EC2') {
             steps {
-                script {
-                    sshagent(['${SSH_CREDENTIALS_ID}']) {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} 'cd ${TARGET_DIR} && docker-compose down && docker-compose up -d --build'
-                        """
-                    }
+                sshagent(credentials: ['your-ssh-credentials-id']) {  // Replace with your actual SSH credentials ID
+                    // SSH into EC2 and run the Docker Compose file
+                    sh "ssh ${SSH_USER}@${SSH_HOST} 'cd ${TARGET_DIR} && docker compose up -d --build'"
                 }
             }
         }
     }
-
     post {
-        success {
-            echo 'Deployment successful!'
-        }
         failure {
             echo 'Deployment failed!'
         }
