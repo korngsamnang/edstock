@@ -1,0 +1,16 @@
+# Client-side
+client/node_modules/
+client/dist/
+client/.next/
+client/.env
+
+# Server-side
+server/node_modules/
+server/dist/
+server/.env
+
+# Root level
+.env
+.prettierrc
+.idea
+.vscode
