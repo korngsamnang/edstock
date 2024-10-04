@@ -7,7 +7,7 @@ pipeline {
         DOCKER_COMPOSE_FILE = '/home/ubuntu/edstock/docker-compose.yml' // Path to Docker Compose file
         SSH_USER = 'ubuntu'  // SSH user for EC2 instance
         SSH_HOST = '18.142.55.141' // Replace with your EC2 public IP or DNS
-        SSH_CREDENTIALS_ID = 'ec2-ssh-key'  // Jenkins credentials ID for EC2 SSH
+        SSH_CREDENTIALS_ID = 'ec2-ssh-credentials'  // Jenkins credentials ID for EC2 SSH
     }
 
     stages {
@@ -36,7 +36,7 @@ pipeline {
                 script {
                     sshagent(['${SSH_CREDENTIALS_ID}']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} 'cd ${TARGET_DIR} && docker compose down && docker compose up -d --build'
+                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} 'cd ${TARGET_DIR} && docker-compose down && docker-compose up -d --build'
                         """
                     }
                 }
