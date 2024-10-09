@@ -6,6 +6,8 @@ pipeline {
         DEPLOY_DIR = '/home/ubuntu/edstock'
         EC2_USER = 'ubuntu'
         EC2_HOST = '54.179.191.117'
+        STACK_NAME = 'edstock-app' // Name of your Docker stack
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml' // Make sure this file exists in your repo
     }
 
     stages {
@@ -33,12 +35,12 @@ pipeline {
             }
         }
 
-        stage('Run Docker Stack on EC2') {
+        stage('Deploy Docker Stack on EC2') {
             steps {
-                sshagent(['ec2-server-key']) {
+                sshagent(['ec2-server-key']) { // Use your credentials ID for SSH
                     sh """
                     ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-                        cd ${DEPLOY_DIR} && ls -l && docker stack deploy -c docker-compose.yml edstock-app
+                        cd ${DEPLOY_DIR} && docker stack deploy -c ${DOCKER_COMPOSE_FILE} ${STACK_NAME}
                     '
                     """
                 }
@@ -47,11 +49,15 @@ pipeline {
     }
 
     post {
+        success {
+            echo 'Deployment succeeded!'
+        }
         failure {
             echo 'Deployment failed!'
         }
-        success {
-            echo 'Deployment succeeded!'
+        always {
+            // This step will run whether the pipeline fails or succeeds
+            echo 'Cleaning up resources...'
         }
     }
 }
