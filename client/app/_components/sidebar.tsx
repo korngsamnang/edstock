@@ -96,7 +96,7 @@ const Sidebar = () => {
                         isSidebarCollapsed ? "hidden" : "block"
                     } font-extrabold text-2xl`}
                 >
-                    EDSTOCKKK
+                    EDSTOCKK
                 </h1>
 
                 <button
