@@ -35,10 +35,10 @@ pipeline {
 
         stage('Run Docker Stack on EC2') {
             steps {
-                sshagent(['ec2-server-key']) { // Use your credentials ID for SSH
+                sshagent(['ec2-server-key']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-                        cd ${DEPLOY_DIR} && docker stack deploy -c docker-compose.yml edstock-app
+                        cd ${DEPLOY_DIR} && ls -l && docker stack deploy -c docker-compose.yml edstock-app
                     '
                     """
                 }
