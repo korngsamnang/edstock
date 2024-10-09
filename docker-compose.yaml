@@ -13,6 +13,8 @@ services:
             - "8000:8000"
         networks:
             - app-network
+        deploy:
+            replicas: 2
 
     frontend:
         build:
@@ -29,6 +31,8 @@ services:
             - api
         networks:
             - app-network
+        deploy:
+            replicas: 2
 
     nginx:
         image: nginx:latest
@@ -41,7 +45,9 @@ services:
             - frontend
         networks:
             - app-network
+        deploy:
+            replicas: 1
 
 networks:
     app-network:
-        driver: bridge
+        driver: overlay
