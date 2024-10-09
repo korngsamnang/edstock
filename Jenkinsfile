@@ -5,7 +5,7 @@ pipeline {
         GIT_REPO = 'git@github.com:korngsamnang/edstock.git'
         DEPLOY_DIR = '/home/ubuntu/edstock'
         EC2_USER = 'ubuntu'
-        EC2_HOST = '18.142.55.141'
+        EC2_HOST = '54.179.191.117'
     }
 
     stages {
