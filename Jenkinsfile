@@ -19,7 +19,7 @@ pipeline {
 
         stage('Clone Repo on EC2') {
             steps {
-                sshagent(['ec2-server-key']) { // Use your credentials ID for SSH
+                sshagent(['ec2-server-key']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
                         if [ ! -d "${DEPLOY_DIR}" ]; then
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Run Docker Compose on EC2') {
             steps {
-                sshagent(['ec2-server-key']) { // Use your credentials ID for SSH
+                sshagent(['ec2-server-key']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
                         cd ${DEPLOY_DIR} && docker compose up -d --build
