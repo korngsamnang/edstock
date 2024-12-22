@@ -16,6 +16,9 @@ COPY . .
 # Generate Prisma client (this will create .prisma folder inside node_modules)
 RUN npx prisma generate
 
+# Run the Prisma migration to create the database schema
+RUN npx prisma migrate dev --name init
+
 # Build the TypeScript code
 RUN npm run build
 
