@@ -46,8 +46,8 @@ services:
             - ./certbot/conf:/etc/letsencrypt
         entrypoint: ["/bin/sh", "-c"]
         command: >
-            certbot certonly --webroot -w /var/www/certbot
-            --email korngsamnang168@gmail.com
-            -d edstock.live -d www.edstock.live -d api.edstock.live
+            "certbot certonly --webroot -w /var/www/certbot
+            --force-renewal --email korngsamnang168@gmail.com
+            -d edstock.live -d www.edstock.live -d api.edstock.live -d www.api.edstock.live
             --agree-tos --non-interactive
-            && certbot renew --quiet
+            && certbot renew --quiet"
