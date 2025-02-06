@@ -6,7 +6,7 @@ services:
         restart: unless-stopped
         environment:
             - PORT=8000
-            - DATABASE_URL=postgresql://neondb_owner:npg_BPlt7dCF4AER@ep-dawn-credit-a1v1pcnu-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+            - DATABASE_URL=${DATABASE_URL}
         ports:
             - "8000:8000"
         command: >
@@ -17,10 +17,10 @@ services:
             context: ./client
             dockerfile: Dockerfile
             args:
-                NEXT_PUBLIC_API_BASE_URL: https://api.edstock.live
+                NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
         restart: unless-stopped
         environment:
-            - NEXT_PUBLIC_API_BASE_URL=https://api.edstock.live
+            - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
         ports:
             - "3000:3000"
         depends_on:
@@ -47,7 +47,8 @@ services:
         entrypoint: ["/bin/sh", "-c"]
         command: >
             "certbot certonly --webroot -w /var/www/certbot
-            --force-renewal --email korngsamnang168@gmail.com
-            -d edstock.live -d www.edstock.live -d api.edstock.live -d www.api.edstock.live
+            --force-renewal --email ${EMAIL}
+            -d ${FRONTEND_DOMAIN} -d ${FRONTEND_DOMAIN_WWW}
+            -d ${BACKEND_DOMAIN} -d ${BACKEND_DOMAIN_WWW}
             --agree-tos --non-interactive
             && certbot renew --quiet"
